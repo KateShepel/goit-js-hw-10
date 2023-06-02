@@ -1,0 +1,27 @@
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+}
+
+.countrie_name_list {
+  font-size: 20px;
+}
+
+.countrie_name {
+  font-size: 60px;
+  font-weight: 700;
+}
+
+.countrie_info {
+  font-size: 25px;
+}
+
+.countrie_info span {
+  font-weight: 700;
+}
