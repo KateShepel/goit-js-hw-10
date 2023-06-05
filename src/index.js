@@ -11,36 +11,61 @@ refs.input.addEventListener('input', debounce(inputHandler, 300));
 
 function inputHandler(e) {
   if (e.target.value.trim() === '') {
-    refs.list.innerHTML = '';
+    cleanerPage();
     return;
   }
 
   fetchCountries(e.target.value.trim())
     .then(result => {
         if (result.length > 10) {
-          Notiflix.Notify.info(
-            'Too many matches found. Please enter a more specific name.'
-          );
-    
+          infoMessage();
         return;
       }
 
       if (result.length >= 2 || result.length <= 10) {
-        refs.list.innerHTML = result
-          .map(
-            element => `
+        createAllElements(result);
+      }
+
+        if (result.length === 1) {
+            createMainElement(result);
+        }
+    })
+    .catch(() => {
+        cleanerPage();
+        errorMessage();
+    });
+}
+
+function cleanerPage() {
+  refs.list.innerHTML = '';  
+}
+
+function infoMessage() {
+    Notiflix.Notify.info(
+      'Too many matches found. Please enter a more specific name.'
+    );
+}
+
+function errorMessage() {
+    Notiflix.Notify.failure('Oops, there is no country with that name');
+}
+
+function createAllElements(result) {
+    refs.list.innerHTML = result
+      .map(
+        element => `
             <li class="item">
                 <div class=container>
                     <img width="20" height="20" src="${element.flags.svg}" alt="countries flag"/>
                     <p class="countrie_name_list">${element.name.official}</p>
                 </div>
             </li>`
-          )
-          .join('');
-      }
+      )
+      .join('');
+}
 
-      if (result.length === 1) {
-        refs.list.innerHTML = result.map(
+function createMainElement(result) {
+    refs.list.innerHTML = result.map(
           element => `
             <li class="item">
                 <div class=container>
@@ -60,10 +85,4 @@ function inputHandler(e) {
                 ).join(', ')}</p>
             </li>`
         );
-      }
-    })
-    .catch(() => {
-        refs.list.innerHTML = '';
-        Notiflix.Notify.failure('Oops, there is no country with that name');
-    });
 }
